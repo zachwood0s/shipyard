@@ -73,7 +73,7 @@ impl<T: Unique> UniqueView<'_, T> {
     }
 }
 
-impl<T: Unique> UniqueView<'_, T> {
+impl<'w, T: Unique> UniqueView<'w, T> {
     /// Returns `true` if the component was inserted before the last [`clear_inserted`] call.  
     ///
     /// [`clear_inserted`]: crate::UniqueViewMut::clear_inserted
@@ -99,6 +99,12 @@ impl<T: Unique> UniqueView<'_, T> {
     #[inline]
     pub fn is_inserted_or_modified(&self) -> bool {
         self.is_inserted() || self.is_modified()
+    }
+
+    /// Returns the inner value from the View, using the parent lifetime of the View
+    #[inline]
+    pub fn as_inner(&self) -> &'w T {
+        &self.unique.value
     }
 }
 
