@@ -100,19 +100,13 @@ impl<'w, T: Unique> UniqueView<'w, T> {
     pub fn is_inserted_or_modified(&self) -> bool {
         self.is_inserted() || self.is_modified()
     }
-
-    /// Returns the inner value from the View, using the parent lifetime of the View
-    #[inline]
-    pub fn as_inner(&self) -> &'w T {
-        &self.unique.value
-    }
 }
 
-impl<T: Unique> Deref for UniqueView<'_, T> {
+impl<'w, T: Unique> Deref for UniqueView<'w, T> {
     type Target = T;
 
     #[inline]
-    fn deref(&self) -> &Self::Target {
+    fn deref(&self) -> &'w Self::Target {
         &self.unique.value
     }
 }
