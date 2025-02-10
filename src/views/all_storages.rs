@@ -28,6 +28,15 @@ impl AsRef<AllStorages> for AllStoragesView<'_> {
     }
 }
 
+impl<'a> AllStoragesView<'a> {
+    /// Returns the inner type, using the correct lifetime.
+    /// Needed because deref does not use `'a` lifetime
+    #[inline]
+    pub fn as_inner(&self) -> ARef<'a, &'a AllStorages> {
+        self.0.clone()
+    }
+}
+
 /// Exclusive view over `AllStorages`.
 pub struct AllStoragesViewMut<'a>(pub(crate) ARefMut<'a, &'a mut AllStorages>);
 
