@@ -275,7 +275,7 @@ impl<'a, T> ARef<'a, T> {
 
 impl<'a, T: ?Sized> ARef<'a, &'a T> {
     #[inline]
-    pub(crate) fn map<U, F: FnOnce(&T) -> &U>(this: Self, f: F) -> ARef<'a, &'a U> {
+    pub fn map<U, F: FnOnce(&T) -> &U>(this: Self, f: F) -> ARef<'a, &'a U> {
         ARef {
             inner: f(this.inner),
             borrow: this.borrow,
@@ -322,7 +322,7 @@ impl<'a, T> ARefMut<'a, T> {
 
 impl<'a, T: ?Sized> ARefMut<'a, &'a mut T> {
     #[inline]
-    pub(crate) fn map<U, F: FnOnce(&mut T) -> &mut U>(this: Self, f: F) -> ARefMut<'a, &'a mut U> {
+    pub fn map<U, F: FnOnce(&mut T) -> &mut U>(this: Self, f: F) -> ARefMut<'a, &'a mut U> {
         ARefMut {
             inner: f(this.inner),
             borrow: this.borrow,
