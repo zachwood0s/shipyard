@@ -72,6 +72,11 @@ impl<'a, T: Component, Track: Tracking> View<'a, T, Track> {
             phantom: PhantomData,
         }
     }
+
+    /// Returns the inner sparse set with the correct lifetimes respsected
+    pub fn as_inner(&self) -> &'a SparseSet<T> {
+        self.sparse_set
+    }
 }
 
 impl<'a, T: Component, Track> View<'a, T, Track>
