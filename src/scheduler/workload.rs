@@ -197,10 +197,16 @@ impl Workload {
     /// Moves all systems of `other` into `Self`, leaving `other` empty.  
     /// This allows us to collect systems in different builders before joining them together.
     pub fn append(mut self, other: &mut Self) -> Self {
-        self.systems.append(&mut other.systems);
+        self.consume(other);
 
         self
     }
+
+    /// See [`Workload::append`]
+    pub fn consume(&mut self, other: &mut Self) {
+        self.systems.append(&mut other.systems);
+    }
+
     /// Propagates all information from `self` and `other` into their respective systems before merging their systems.  
     /// This includes `run_if`/`skip_if`, `tags`, `before`/`after` requirements.
     pub fn merge(mut self, mut other: Workload) -> Workload {
@@ -295,10 +301,15 @@ impl Workload {
     /// ```
     #[track_caller]
     pub fn with_system<B, R, S: IntoWorkloadSystem<B, R>>(mut self, system: S) -> Workload {
-        self.systems.push(system.into_workload_system().unwrap());
-
+        self.add_system(system);
         self
     }
+
+    /// See [`Workload::with_system`]
+    pub fn add_system<B, R, S: IntoWorkloadSystem<B, R>>(&mut self, system: S) {
+        self.systems.push(system.into_workload_system().unwrap());
+    }
+
     /// Adds a fallible system to the workload being created.  
     /// The workload's execution will stop if any error is encountered.
     ///
