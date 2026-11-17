@@ -1460,9 +1460,9 @@ fn insert_before_after_system(
         batches.parallel_run_if.insert(
             parallel_position,
             if single_system {
-                (Some(batches.sequential_run_if.len() - 1), Vec::new())
+                (Some(sequential_position), Vec::new())
             } else {
-                (None, vec![batches.sequential_run_if.len() - 1])
+                (None, vec![sequential_position])
             },
         );
         par_system_index_map.insert(
@@ -1486,14 +1486,14 @@ fn insert_before_after_system(
         );
     } else if single_system {
         batches.parallel[parallel_position].0 = Some(system_index);
-        batches.parallel_run_if[parallel_position].0 = Some(batches.sequential_run_if.len() - 1);
+        batches.parallel_run_if[parallel_position].0 = Some(sequential_position);
         par_system_index_map[parallel_position].0 = Some(index);
         workload_info.batch_info[parallel_position].systems.0 = Some(system_info);
     } else {
         batches.parallel[parallel_position].1.push(system_index);
         batches.parallel_run_if[parallel_position]
             .1
-            .push(batches.sequential_run_if.len() - 1);
+            .push(sequential_position);
         par_system_index_map[parallel_position].1.push(index);
         workload_info.batch_info[parallel_position]
             .systems
